@@ -116,7 +116,11 @@ function App() {
                 setEditMode(false);
                 setFormErros([]);
                 getUsers();
-                alert('User has been updated.');
+                Swal.close();
+                setTimeout(() => {
+                    Swal.fire("User has been updated");
+                }, 1000);
+
 
             }).catch((error) => {
                 let errorsList: any = [];
