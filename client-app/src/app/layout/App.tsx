@@ -24,7 +24,7 @@ function App() {
         return config;
     });
 
-    
+
     useEffect(() => {
         getUsers();
     }, []);
@@ -35,6 +35,12 @@ function App() {
         axios.get('http://localhost:64323/api/account').then(response => {
             setUsers(response.data);
             Swal.close();
+        }).catch((error) => {
+
+            if (error.response.status == 401) {
+                userStore.logout();
+                history.push('/login');
+            }
         });
     };
 
@@ -59,19 +65,11 @@ function App() {
 
         setSubmitting(true);
 
-
         if (user.id) {
             updateUser(user);
         } else {
             addNewUser(user);
         }
-
-
-        // user.id
-        //     ? setUsers([...users.filter(x => x.id !== user.id), user])
-        //     : setUsers([...users, { ...user, id: uuid() }]);
-        // setEditMode(false);
-        // setSelectedUser(user);
     }
 
     function addNewUser(user: User) {
@@ -113,7 +111,7 @@ function App() {
 
     function updateUser(user: User) {
 
-        axios.put('http://localhost:64323/api/account/'+user.id, user)
+        axios.put('http://localhost:64323/api/account/' + user.id, user)
             .then(res => {
                 setEditMode(false);
                 setFormErros([]);
