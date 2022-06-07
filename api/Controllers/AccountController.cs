@@ -134,7 +134,9 @@ namespace Assessment.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.Users
+                .Include(r => r.RefreshTokens)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             await _userManager.DeleteAsync(user);
 
